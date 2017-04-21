@@ -1,0 +1,142 @@
+const test = require('tape')
+const before = test;
+const after = test;
+const _ = require('underscore'),
+	strings= require('../lib/strings')
+
+
+
+// Try this, instead:
+const setup = () => {
+  const fixtures = {};
+
+  // Insert your fixture code here.
+  // Make sure you're creating fresh objects each
+  // time setup() is called.
+  return fixtures;
+};
+
+const teardown = (fixtures) => {
+  // Dispose of your fixtures here.
+};
+
+
+//before('before', function (assert) {
+//
+//
+//  assert.end();
+//});
+
+(substringTests= () => { 
+	var substringTests = [
+	{	
+		name : "test character simple", 
+		value : "proviamo;stringa fra@ tentativo",
+		first : ";",
+		second : "@",
+		expected : "stringa fra",
+	},
+	{
+		name : "Repetuted first and second", 
+		value : "; still inside; internal @ i try@ end",
+		first : ";",
+		second : "@",
+		expected : " still inside; internal @ i try",
+	},
+	{
+		name : "Test with words", 
+		value : "### internal### @@@ i try@@@",
+		first : "###",
+		second : "@@@",
+		expected : " internal### @@@ i try",
+	},
+	{
+		name : "Test without second", 
+		value : "this is a string #until the end",
+		first : "#",
+		expected : "until the end"
+
+	},
+	{
+		name : "Test empty second", 
+		value : "this is a string #until the end",
+		first : "#",
+		second : "",
+		expected : "until the end"
+
+	},
+	{
+		name : "Extract git username and password", 
+		value : "https://g.per45:@miapassword@@gitlab.com/g.per45/testlab.git",
+		first : "https://",
+		second : "@",
+		expected : "g.per45:@miapassword@"
+	}
+
+	]
+
+	_.each(substringTests, function(ss) { 
+
+		test(ss.name, (assert) => { 
+			if(ss.second) 
+				actual = strings.substring(ss.value, ss.first, ss.second)
+			else actual = strings.substring(ss.value, ss.first)
+			assert.equal(actual, ss.expected, 
+				"###"+ss.value+"###"+ " should be substringed to ###"+ss.expected+"###"
+			)
+
+			assert.end()
+		})
+
+
+	})
+}());
+
+//Remove tests
+(removeTests= () => {
+	
+	var toRemoveTests = [
+	{	
+		name : "test  simple", 
+		value : "miastring",
+		toRemove : "mia",
+		expected: "string" 
+	},
+	{	
+		name : "test  only first", 
+		value : "miastringmia",
+		toRemove : "mia",
+		expected: "stringmia" 
+	},
+	{	
+		name : "test global", 
+		value : "miastringmia",
+		toRemove : "mia",
+		expected: "string",
+		global : true
+	},
+	{	
+		name : "test with strange characters", 
+		value : "gijeri\// gewaegnwoegwain \//",
+		toRemove : "\//",
+		expected: "gijeri gewaegnwoegwain ",
+		global : true
+	}
+
+	]
+
+	_.each(toRemoveTests, (e) => {
+			test(e.name, (assert) => {
+				assert.equal(strings.remove(e.value, e.toRemove, e.global), 
+					e.expected, 
+					"Should remove" 
+				)
+
+				assert.end()
+			})	
+	})
+
+
+}
+());
+

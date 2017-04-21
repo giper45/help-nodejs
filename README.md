@@ -1,2 +1,2 @@
-# node_dbg_utils
-A simple module that provides utility for debugging and testing purposes
+# help-node js
+A simple module that provides utility for managment errors, debugging, testing purposes

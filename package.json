@@ -4,7 +4,7 @@
   "description": "A simple module that provides utility for managment errors, debugging, testing purposes",
   "main": "index.js",
   "scripts": {
-    "test": "tap"
+    "test": "tape test/*.js | tap-dot "
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/giper45/help-nodejs/issues"
   },
-  "homepage": "https://github.com/giper45/help-nodejs#readme"
+  "homepage": "https://github.com/giper45/help-nodejs#readme",
+  "devDependencies": {
+    "tap-dot": "^1.0.5",
+    "tape": "^4.6.3",
+    "underscore": "^1.8.3"
+  }
 }

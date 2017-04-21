@@ -1,6 +1,8 @@
-const printDbg = require('./lib/print_dbg') 
+const printDbg = require('./lib/print_dbg') ,
+	strings = require('./lib/strings.js')
 var api = {
-	printDbg : printDbg	
+	printDbg : printDbg	, 	
+	strings : strings
 }
 
 

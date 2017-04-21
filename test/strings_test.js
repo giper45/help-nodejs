@@ -161,3 +161,117 @@ const teardown = (fixtures) => {
 }
 ());
 
+
+
+//Remove tests
+(addTests= () => {
+	
+	var toAddTests = [
+	{	
+		name : "test  simple", 
+		value : "miastring",
+		toAdd : "ana",
+		after : "str",
+		expected: "miastranaing" 
+	},
+
+	{	
+		name : "At the start", 
+		value : "peppino pazzo",
+		toAdd : "er ",
+		expected: "er peppino pazzo" 
+	},
+	{	
+		name : "With the same word inside at the end", 
+		value : "peppino pazzo",
+		toAdd : "zzo",
+		after : "o",
+		global : true,
+		expected: "peppinozzo pazzozzo" 
+	},
+	{	
+		name : "simple with global", 
+		value : "is my string very growing",
+		toAdd : " powered",
+		after : "ing",
+		global : true,
+		expected: "is my string powered very growing powered" 
+	}
+	]
+
+	_.each(toAddTests, (e) => {
+			test(e.name, (assert) => {
+				assert.equal(strings.add(e.value, e.toAdd, e.after, e.global), 
+					e.expected, 
+					"Should remove" 
+				)
+
+				assert.end()
+			})	
+	})
+
+
+}
+());
+
+
+
+
+//Remove tests
+(removeTests= () => {
+	
+	var toRemoveTests = [
+	{	
+		name : "test  simple", 
+		value : "miastring",
+		toRemove : "mia",
+		expected: "string" 
+	},
+	{	
+		name : "test  only first", 
+		value : "miastringmia",
+		toRemove : "mia",
+		expected: "stringmia" 
+	},
+	{	
+		name : "test global", 
+		value : "miastringmia",
+		toRemove : "mia",
+		expected: "string",
+		global : true
+	},
+	{	
+		name : "test with strange characters", 
+		value : "gijeri\// gewaegnwoegwain \//",
+		toRemove : "\//",
+		expected: "gijeri gewaegnwoegwain ",
+		global : true
+	},
+	{	
+		name : "Should return the same", 
+		value : "peterhateme",
+		toRemove : "nona",
+		expected: "peterhateme",
+		global : true
+	}
+
+	]
+
+	_.each(toRemoveTests, (e) => {
+			test(e.name, (assert) => {
+				assert.equal(strings.remove(e.value, e.toRemove, e.global), 
+					e.expected, 
+					"Should remove" 
+				)
+
+				assert.end()
+			})	
+	})
+
+
+}
+());
+
+
+
+

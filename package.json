@@ -1,0 +1,19 @@
+{
+  "name": "help-nodejs",
+  "version": "0.1.0",
+  "description": "A simple module that provides utility for managment errors, debugging, testing purposes",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giper45/help-nodejs.git"
+  },
+  "author": "Gaetano Perrone",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/giper45/help-nodejs/issues"
+  },
+  "homepage": "https://github.com/giper45/help-nodejs#readme"
+}

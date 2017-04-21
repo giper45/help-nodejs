@@ -71,6 +71,20 @@ const teardown = (fixtures) => {
 		first : "https://",
 		second : "@",
 		expected : "g.per45:@miapassword@"
+	},
+	{
+		name : "Should not extract nothing (empty string)", 
+		value : "https://gitlab.com/g.per45/testlab.git",
+		first : "https://",
+		second : "@",
+		expected : ""
+	},
+	{
+		name : "Should return an empty string don't find first character", 
+		value : "peterhateme",
+		first : "bu",
+		second : "any",
+		expected : ""
 	}
 
 	]
@@ -120,6 +134,13 @@ const teardown = (fixtures) => {
 		value : "gijeri\// gewaegnwoegwain \//",
 		toRemove : "\//",
 		expected: "gijeri gewaegnwoegwain ",
+		global : true
+	},
+	{	
+		name : "Should return the same", 
+		value : "peterhateme",
+		toRemove : "nona",
+		expected: "peterhateme",
 		global : true
 	}
 

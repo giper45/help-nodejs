@@ -31,24 +31,24 @@ assertFailure = (assert,p) => {
 
 test('Test promise with callback success', (assert) => {
 
-   var whoCallCallback = {  f: (callback) => {
+   var whoCallAsync = {  f: (callback) => {
 		console.log("He calls callback with data") 
 		callback(null, "data") 
 		}
 	}
 	
 
-	assertSuccess(assert,p.fromCallback(whoCallCallback.f) )
+	assertSuccess(assert,p.fromAsync(whoCallAsync.f) )
 
 })
 
 
 test('Test promise with an exception error ', (assert) => {   
-	var whoCallCallback = {  f: (callback) => {
+	var whoCallAsync = {  f: (callback) => {
 		callback(new Error("a new error occurred", null))
 		}
 	}
-		assertFailure(assert,p.fromCallback(whoCallCallback.f) )
+		assertFailure(assert,p.fromAsync(whoCallAsync.f) )
 	
 })
 		
@@ -56,19 +56,19 @@ test('Test promise with an exception error ', (assert) => {
 
 test('Test promise with callback err', (assert) => {
 
-   var whoCallCallback = {  f: (callback) => {
+   var whoCallAsync = {  f: (callback) => {
 		console.log("He calls callback with err") 
 		callback("Error", "some useless data") 
 		}
 	}
 	
 
-	assertFailure(assert,p.fromCallback(whoCallCallback.f) )
+	assertFailure(assert,p.fromAsync(whoCallAsync.f) )
 })
 
 
 test('Write a file and read after with p', (assert) => {
-		p.fromCallback(fs.writeFile, ['nuovo.txt', 'nuovofile'])
+		p.fromAsync(fs.writeFile, ['nuovo.txt', 'nuovofile'])
 			.then( (data) => {
 //				console.log("data:")
 //				console.log(data)
@@ -77,7 +77,7 @@ test('Write a file and read after with p', (assert) => {
 				console.log("now write file")
 
 				try{ 
-				p.fromCallback(fs.readFile, ['nuovo.txt', 'utf-8'])
+				p.fromAsync(fs.readFile, ['nuovo.txt', 'utf-8'])
 				.then( (data) => {
 //					console.log("in data")
 //					console.log(data)
@@ -102,7 +102,98 @@ test('Write a file and read after with p', (assert) => {
 				console.log("erro")
 				console.log(err)
 			}) //End first promise
+})
+
+
+test("fromCB with a string parameter" , (assert) => { 
+	p.fromAsync(fs.readFile, "nuovo.txt") 
+		.then((data) => {
+					console.log("data")
+					assert.pass("ok")
+					assert.end()
+		},
+		(err) => {
+			assert.fail("Error"+err)
+			assert.end()
+		})
+})
+
+
+test("Simple arithmetic sequence test", (assert) => {
+	p.sequence([
+		init= () => { return 2+3 }, 
+		add= (five) => { return five+5 } ,
+		mult= (ten) => { return ten*4 } ,
+		(res) => {
+			assert.equal(res, 40, "Res should be 40") 
+			assert.end()
+
+			}
+		])
+	})
+
+
+test("Sequence with fs operations", (assert) => {
+	p.sequence([  
+			//Write file
+			p.fromAsync(fs.writeFile, ["inSeq.txt", "sonoinseq"]),
+			//Read file
+			() => { return p.fromAsync(fs.readFile, ["inSeq.txt", "utf8"])} ,
+		])
+
+		.then( 
+			(data) => { 
+				assert.equal(data, "sonoinseq","should read the written file")
+				assert.end()
+			},
+			(err) => {
+				assert.fail()
+				assert.end()
+				}
+		)
 
 })
 
 
+test("Convert sync function", (assert) => {
+	f = (d1, d2) => {  return d1 +d2}
+	p.fromSync(f, [3, 5]) 
+		.then(  (data) => {
+			assert.equal(data, 8) 
+			assert.end()
+		},
+			(err) => {
+			assert.fail(err)
+			assert.end()
+			}	
+		)
+
+})
+
+
+test("Convert sync that throws exception", (assert) => {
+	f = (d1, d2) => {   throw new Error("madness")}
+	assertFailure(assert,p.fromSync(f, [3,4]) )
+})
+
+
+test("Mixed seq sync and async", (assert) => { 
+	fSync = (d1,d2) => { return d1+d2 } 
+	
+	p.sequence([
+		() => {return p.fromSync(fSync, [2, 3])},
+		(data) => {return p.fromAsync(fs.writeFile, ["operations.txt", data])},
+		() => {  return p.fromSync(fs.readFileSync, ["operations.txt", "utf8"]) }
+		])
+		.then( 
+		(data) => { 
+				assert.equal(data, '5', "should give 5")
+				assert.end()
+			},
+
+		(err) =>{
+				assert.fail("failure") 
+				assert.end()
+		      })
+
+})

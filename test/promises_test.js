@@ -1,5 +1,7 @@
 const test = require('tape'), 
-	promises= require('../lib/promises')
+	p= require('../lib/promises.js'),
+	fs = require('fs'),
+	pathExists = require('path-exists')
 
 assertSuccess = (assert,p) =>{
 
@@ -36,11 +38,7 @@ test('Test promise with callback success', (assert) => {
 	}
 	
 
- whoCallCallback.f(function(err, data) {
-	assertSuccess(assert,promises.fromCallback(err, data) )
-
-
-})
+	assertSuccess(assert,p.fromCallback(whoCallCallback.f) )
 
 })
 
@@ -50,10 +48,7 @@ test('Test promise with an exception error ', (assert) => {
 		callback(new Error("a new error occurred", null))
 		}
 	}
-	whoCallCallback.f(function(err, data) {
-		assertFailure(assert,promises.fromCallback(err, data) )
-
-	})
+		assertFailure(assert,p.fromCallback(whoCallCallback.f) )
 	
 })
 		
@@ -68,11 +63,46 @@ test('Test promise with callback err', (assert) => {
 	}
 	
 
- whoCallCallback.f(function(err, data) {
-	assertFailure(assert,promises.fromCallback(err, data) )
+	assertFailure(assert,p.fromCallback(whoCallCallback.f) )
 })
 
-})
 
+test('Write a file and read after with p', (assert) => {
+		p.fromCallback(fs.writeFile, ['nuovo.txt', 'nuovofile'])
+			.then( (data) => {
+//				console.log("data:")
+//				console.log(data)
+				assert.equal(pathExists.sync('nuovo.txt'), true, 
+				'should exists a file ') ;
+				console.log("now write file")
+
+				try{ 
+				p.fromCallback(fs.readFile, ['nuovo.txt', 'utf-8'])
+				.then( (data) => {
+//					console.log("in data")
+//					console.log(data)
+					assert.equal(data, 'nuovofile', 'should read a file')
+					assert.end()
+				},
+				(err) => {
+					//console.log("in error")
+					assert.fail(err)
+					assert.end()
+				}
+
+				)
+				}
+				catch(e) {
+					console.log("ERROR")
+					console.log(e)
+				}
+	
+			}, 
+			(err) => {
+				console.log("erro")
+				console.log(err)
+			}) //End first promise
+
+})
 
 

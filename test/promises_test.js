@@ -1,7 +1,8 @@
 const test = require('tape'), 
 	p= require('../lib/promises.js'),
 	fs = require('fs'),
-	pathExists = require('path-exists')
+	pathExists = require('path-exists'),
+	Q = require('q')
 
 assertSuccess = (assert,p) =>{
 
@@ -195,5 +196,75 @@ test("Mixed seq sync and async", (assert) => {
 				assert.fail("failure") 
 				assert.end()
 		      })
+
+})
+
+
+
+
+test("Sequence maker simple", (assert) => {
+	var makerSeq = p.seqMaker()
+	makerSeq
+		.addSync(function(d1,d2) { return d1+d2}, [4, 5])
+		.addSync(function(data) { return data+5 },[], true)
+
+
+	makerSeq.start()
+		.then( (data) => {
+			assert.equal(data, 14, "should do the sync ops")			
+			assert.end()
+
+		},
+
+		(err) => {
+			assert.fail("failure") 
+			assert.end()
+		})
+
+
+
+
+})
+
+test("Sequence with write and read ", (assert) => {
+	var makerSeq = p.seqMaker()
+	makerSeq
+		.addSync(function(d1,d2) { return d1+d2}, [4, 5])
+		.addSync(fs.writeFileSync, ['toSave.txt'], true)
+		.addAsync(fs.readFile, ['toSave.txt', 'utf8'])
+		.start()
+			.then( (data) => {
+				assert.equal(data, '9', "should do the sync ops")			
+				assert.end()
+
+			},
+
+			(err) => {
+				assert.fail("failure") 
+				assert.end()
+			})
+})
+
+
+test.only("With promise", (assert) => {
+	f = () => { return Q.fcall(() => { return 10 }) }
+	var makerSeq = p.seqMaker() 
+
+	makerSeq
+		.addPromise(f)
+		.addSync(function(d1,d2, d3) { return d1+d2- d3}, [4,5], true,0)
+		.start() 
+			.then( (data) => {
+				assert.equal(data,9, "should give 9")					
+				assert.end()
+			},
+				(err) => {
+				assert.fail("failure") 
+				console.log(err)
+				assert.end()
+			})
+			
+	
+
 
 })

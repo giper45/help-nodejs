@@ -1,6 +1,6 @@
 {
   "name": "help-nodejs",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "A simple module that provides utility for managment errors, debugging, testing purposes",
   "private": true,
   "main": "index.js",

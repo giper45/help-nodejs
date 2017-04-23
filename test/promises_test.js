@@ -246,7 +246,7 @@ test("Sequence with write and read ", (assert) => {
 })
 
 
-test.only("With promise", (assert) => {
+test("With promise", (assert) => {
 	f = () => { return Q.fcall(() => { return 10 }) }
 	var makerSeq = p.seqMaker() 
 

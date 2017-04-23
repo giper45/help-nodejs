@@ -27,7 +27,7 @@ const teardown = (fixtures) => {
 //  assert.end();
 //});
 
-(substringTests= () => { 
+(substringTests= function ()  { 
 	var substringTests = [
 	{	
 		name : "test character simple", 
@@ -104,7 +104,7 @@ const teardown = (fixtures) => {
 
 
 	})
-}());
+})();
 
 //Remove tests
 (removeTests= () => {
@@ -159,7 +159,7 @@ const teardown = (fixtures) => {
 
 
 }
-());
+)();
 
 
 
@@ -212,7 +212,7 @@ const teardown = (fixtures) => {
 
 
 }
-());
+)();
 
 
 
@@ -270,7 +270,7 @@ const teardown = (fixtures) => {
 
 
 }
-());
+)();
 
 
 

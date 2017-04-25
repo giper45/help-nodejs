@@ -79,7 +79,7 @@ test("Should throw error if condition doesn't exists", (assert) => {
 
 });
 
-test.only("Joi error ", (assert) => {
+test("Joi error ", (assert) => {
 	var c = checker.JoiChecker()
 	errors.create({name: "NoNumber",
  			defaultMessage: "No number inserted" 
@@ -97,15 +97,3 @@ test.only("Joi error ", (assert) => {
 		
 
 })
-//AppErrors
-test("AppErrors should not add no error type" , (assert) => {
-	var a = AppErrors() 
-	const oneError = new Error("A real error") 
-	assert.throws(() => a.add("te"), "SHould throw an error")
-
-	//Should add correct errors
-
-	assert.end()
-})
-
-

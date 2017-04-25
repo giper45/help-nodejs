@@ -198,20 +198,89 @@ Some simple utility function to manage strings:
 
 ### Error managment
 
+You should create a set of errors for your application, and ofter you'll map a set of backhend errors with a subset of front-end errors (you shouldn't show to user that a "SQL Insert fail", but a user-friendly message, and the same with check controls). 
+You should give an error message and it's a good practice to add a code for the messages. I decided to not reinvent the wheel, there's a wonderful module that do this: https://www.npmjs.com/package/errors. 
+So, I've created a simple module that collect a series of conditions. You load a condition with 
+```javascript
+
+ load(name, conditionFn, error) 
+ 
+ ```
+where name is a string, conditionFn is a function that returns a boolean (it implements a specific condition that you want to load), error is the error that will be thrown (or sent to callback) if the  check function fails. The check function check a specific argument: 
+```javascript
+
+ check(arg, cname, callback)
+ 
+ ```
+
+An example of use is this: 
+```
+   const checker = require('help-nodejs').checker
+  var c = checker.Checker()
+        c.load("simple", (e) => {
+                                                return e > 10
+                                }
+                        , new Error("arg must be > 10"))
+
+        //Sync mode
+        assert.throws(() => c.check(9, "simple"), "Should throw exc")
+        //With callback 
+        c.check(9, "simple", (err) => { assert.notEqual(err, null, "Error should not be null")} )
+        c.check(11, "simple", (err) => { assert.equal(err, null, "Error should be null")} )
+
+        //c.load("Numberic", c.JoiCondition(Joi.number()), Joi.number().error)
+        assert.end()
+
+```
+(If you want a promise, you can use the fromAsync function of promises)
+You'll know the wonderful Joi library... if you don't know, do it now! 
+checker offers a specific JoiChecker type that you can use to set JoiChecker conditions: 
 
 
-## API Reference
+```javascript
+test("With JoiChecker", (assert) => {
 
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
+        var c = checker.JoiChecker()
+        var customMessage = 'String type error'
+        var customError = new Error(customMessage)
+        c.load("numeric", Joi.number())
+        c.load("alphabetic", Joi.string().required(), customError)
+
+
+        c.check(12, "numeric", (err) => {
+                assert.equal(err, null, "Err should be null")
+        })
+
+        c.check("string", "numeric", (err) => {
+                assert.notEqual(err, null, "Err should not be null")
+        })
+
+        assert.throws( () => c.check(14, "alphabetic") , "shoul throw exception")
+        c.check(14, "alphabetic", (err) => {
+                assert.notEqual(err, null, "Err should not be null")
+                assert.equal(err.message, customMessage)
+                assert.end()
+        })
+
+})
+        
+        
+```
+
+
+
+
 
 ## Tests
 
-Describe and show how to run the tests with code examples.
+With tape, run with npm test
 
 ## Contributors
 
-Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.
+
+
+
 
 ## License
 
-A short snippet describing the license (MIT, Apache, etc.)
+MIT Licensed

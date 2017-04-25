@@ -32,7 +32,9 @@ async.waterfall([
         }
          )
    ```
+   
 Well, this is a great approach to avoid the "hell of waterfall if then else" : 
+
 ```javascript
  doSomething(args, function(err, data) {
     if(!err) 
@@ -42,9 +44,13 @@ Well, this is a great approach to avoid the "hell of waterfall if then else" :
           }
        })
  ```
+ 
+ 
 Anyway, it's a little annoying to set callback to the end of each func. 
 An amazing approach is to use promises (https://www.npmjs.com/package/q) . 
 Great, of course, but how to manage different types of functions (async, sync)? help-nodejs converts all types of functions in promise functions : 
+
+
 ```javascript
 p = require('help-nodejs').promises
 p.sequence([
@@ -89,6 +95,8 @@ p.sequence([
 
 p.sequence accept and execute a list of promises that you can convert from sync and async functions with p.fromSync, p.fromAsync. These functions accept an array of arguments. 
 Boring because too much code? Well, use the seqMaker func: 
+
+
 ```javascript
     var makerSeq = p.seqMaker()
         makerSeq
@@ -106,7 +114,11 @@ Boring because too much code? Well, use the seqMaker func:
                                 assert.fail("failure")
                                 assert.end()
                         })
-```                        
+                   
+```
+
+
+
 
 Now your code is more compact and simpler, like a sequential code. 
 

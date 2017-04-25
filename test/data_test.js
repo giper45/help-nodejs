@@ -44,7 +44,7 @@ test("Test search with special attribute", (assert) => {
 			{id:2, name:"jack" ,color:"red" } 
 		]
 
-	objects = data.Objects() 
+	var objects = data.Objects() 
 	objects.addAll(ele) 
 	
 	assert.equal(ele[0], objects.get({color:"blue"}),"should give blue")
@@ -58,7 +58,7 @@ test("Test find with multples options", (assert) => {
 			{id:3, name:"jack" ,color:"red" } ,  
 		]
 
-	objects = data.Objects()
+var	objects = data.Objects()
 	objects.addAll(ele)
 	assert.same(objects.get({color:'red'}), 
 			[
@@ -67,5 +67,19 @@ test("Test find with multples options", (assert) => {
 			]
 	)	
 	assert.end()	
+
+})
+
+test("Test with condition setted", (assert) => {
+	var objects = data.Objects(function(e){ if (e.name && e.color) return true; else return false })
+	objects.setOptions({exception : {add:true, uniq:true}})
+				
+					
+	objects.add({name:'prova', color:'green'})
+	assert.throws(() => objects.add({name:'prova', color:'red'}), "Should throw error")
+	assert.throws(() => objects.add({name:'p'}), "No color should throw error")
+	assert.throws(() => objects.add({color:'p'}), "No name should throw error")
+	//objects.add({color:'p'})
+	assert.end()
 
 })

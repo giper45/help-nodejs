@@ -263,8 +263,4 @@ test("With promise", (assert) => {
 				console.log(err)
 				assert.end()
 			})
-			
-	
-
-
 })

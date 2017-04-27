@@ -1,6 +1,6 @@
 {
   "name": "help-nodejs",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "A simple module that provides utility for implements sequence of operations via promises, utility functions , managment errors, debugging, testing purposes",
   "main": "index.js",
   "scripts": {

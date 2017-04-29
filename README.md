@@ -32,8 +32,10 @@ async.waterfall([
             //Manage data 
         }
          )
-   ```
+```
    
+   
+
 Well, this is a great approach to avoid the "hell of waterfall if then else" : 
 
 ```javascript
@@ -44,7 +46,7 @@ Well, this is a great approach to avoid the "hell of waterfall if then else" :
           ..... 
           }
        })
- ```
+       ```
  
  
 Anyway, it's a little annoying to set callback to the end of each func. 
